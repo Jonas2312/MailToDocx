@@ -1,0 +1,50 @@
+﻿<Window x:Class="Frontend.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Frontend"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="1" Grid.Column="1">Pdf Ordner</TextBlock>
+        <TextBlock Grid.Row="2" Grid.Column="1">Bilder Ordner</TextBlock>
+        <TextBlock Grid.Row="3" Grid.Column="1">Worddateien Ordner</TextBlock>
+
+        <TextBox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Name="PdfFolder" TextChanged="PdfFolder_TextChanged"></TextBox>
+        <TextBox Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Name="ImageFolder" TextChanged="ImageFolder_TextChanged"></TextBox>
+        <TextBox Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Name="DocxFolder" TextChanged="DocxFolder_TextChanged"></TextBox>
+
+        <Button Grid.Row="1" Grid.Column="4" Name="PdfFolderButton" Click="PdfFolder_Button_Click">Ordner auswaehlen</Button>
+        <Button Grid.Row="2" Grid.Column="4" Name="ImageFolderButton" Click="ImageFolder_Button_Click">Ordner auswaehlen</Button>
+        <Button Grid.Row="3" Grid.Column="4" Name="DocxFolderButton" Click="DocxFolder_Button_Click">Ordner auswaehlen</Button>
+        
+        <Button Grid.Row="6" Grid.Column="2" Name="StartButton" Click="Start_Button_Click">Starten</Button>
+        <Button Grid.Row="6" Grid.Column="4" Name="StopButton" Click="Stop_Button_Click">Stop</Button>
+
+        <Button Grid.Row="8" Grid.Column="5" Name="EmailAccount" Click="EmailAccount_Button_Click">Email Account</Button>
+
+        <TextBlock Grid.Row="8" Grid.Column="1" Name="IsRunning" Foreground="Blue">Suche nach neuen mails..</TextBlock>
+        <TextBlock Grid.Row="8" Grid.Column="2" Grid.ColumnSpan="3" Name="Status"></TextBlock>
+    </Grid>
+</Window>
