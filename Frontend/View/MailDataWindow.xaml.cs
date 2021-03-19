@@ -24,9 +24,5 @@ namespace Frontend
             InitializeComponent();
         }
 
-        public void Init(MainWindow mainWindow)
-        {
-            EmailAccountData.Init(mainWindow);
-        }
     }
 }

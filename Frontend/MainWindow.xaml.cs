@@ -13,8 +13,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Threading;
-using MailToDocx;
 using System.Windows.Threading;
+using Frontend.ViewModel;
+using Converter;
 
 namespace Frontend
 {
@@ -24,17 +25,8 @@ namespace Frontend
     public partial class MainWindow : Window
     {
         Thread t1;
-        Thread StatusUpdate;
 
-        string pdf;
-        string jpg;
-        string docx;
-
-
-        public string hostname;
-        public int port;
-        public string username;
-        public string password;
+        UserDataViewModel UserDataViewModel;
 
         MailDataWindow MailDataWindow;
         public MainWindow()
@@ -48,18 +40,8 @@ namespace Frontend
             StopButton.Visibility = Visibility.Collapsed;
             IsRunning.Visibility = Visibility.Collapsed;
 
-            PdfFolder.Text = "C:\\Users\\Ile\\Desktop\\EDZTESTFOLDER\\Pdf"; ;
-            ImageFolder.Text = "C:\\Users\\Ile\\Desktop\\EDZTESTFOLDER\\jpg";
-            DocxFolder.Text = "C:\\Users\\Ile\\Desktop\\EDZTESTFOLDER\\docx";
-
-            hostname = "mail.your-server.de";
-            port = 993;
-            username = "orga@enddarm-zentrum.de";
-            password = "W444mZMuu6a8b12c";
-
-            pdf = PdfFolder.Text;
-            jpg = ImageFolder.Text;
-            docx = DocxFolder.Text;
+            UserDataViewModel = new UserDataViewModel();
+            DataContext = UserDataViewModel;
 
             //  DispatcherTimer setup
             DispatcherTimer dispatcherTimer;
@@ -68,42 +50,49 @@ namespace Frontend
             dispatcherTimer.Tick += new EventHandler(updateStatus);
             dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
             dispatcherTimer.Start();
+
         }
 
 
         public void updateStatus(object sender, EventArgs e)
         {
-            if(Pipeline.name.Length > 0)
+            debug = ShowDebug.IsChecked.Value;
+
+            UserDataViewModel.UserData.Save();
+            if(Status.Text != status)
             {
-                if (Pipeline.name.Contains("ERROR"))
+                while (status.Split('\n').Length > 5)
                 {
-                    Status.Text = Pipeline.name;
-
-                    //var converter = new System.Windows.Media.BrushConverter();
-                    //var brush = (Brush)converter.ConvertFromString("#00FF0090");
-                    //Status.Foreground = brush;
+                    status = status.Substring(status.IndexOf("\n") + 1);
                 }
-                else
-                {                    
-                    Status.Text = "Received new mail: " + Pipeline.name;
+                    
 
-                    //var converter = new System.Windows.Media.BrushConverter();
-                    //var brush = (Brush)converter.ConvertFromString("#00000090");
-                    //Status.Foreground = brush;
-                }                
+                status += " [" + DateTime.Now + "] \n";
+                Status.Text = status;
             }
         }
 
-        public void runPipeline()
+        string status = String.Empty;
+        bool debug = false;
+        public void RunPipeline()
         {
-
-            Pipeline.f(pdf, jpg, docx, hostname, port, username, password);
+            while(true)
+            {
+                try
+                {
+                    UserDataViewModel.RunPipeline();
+                    status += "Received new mail: " + Pipeline.name;
+                }
+                catch(Exception e)
+                {
+                    if(debug)
+                        status += e.Message;
+                }
+            }
         }
-
-
         private void Start_Button_Click(object sender, RoutedEventArgs e)
         {
-            t1 = new Thread(runPipeline);
+            t1 = new Thread(RunPipeline);
             t1.Start();
             StartButton.Visibility = Visibility.Collapsed;
             EmailAccount.Visibility = Visibility.Collapsed;
@@ -112,7 +101,8 @@ namespace Frontend
 
             try
             {
-                MailDataWindow.Close();
+                if(MailDataWindow != null)
+                    MailDataWindow.Close();
             }
             catch
             {
@@ -141,52 +131,10 @@ namespace Frontend
 
             }
             MailDataWindow = new MailDataWindow();
-            MailDataWindow.Init(this);
+            MailDataWindow.DataContext = UserDataViewModel;
             MailDataWindow.Show();
         }
         
 
-        private void PdfFolder_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            pdf = PdfFolder.Text;
-        }
-
-        private void ImageFolder_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            jpg = ImageFolder.Text;
-        }
-
-        private void DocxFolder_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            docx = DocxFolder.Text;
-        }
-
-
-        private void PdfFolder_Button_Click(object sender, RoutedEventArgs e)
-        {
-            using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
-            {
-                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
-                PdfFolder.Text = dialog.SelectedPath;
-            }
-        }
-
-        private void ImageFolder_Button_Click(object sender, RoutedEventArgs e)
-        {
-            using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
-            {
-                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
-                ImageFolder.Text = dialog.SelectedPath;
-            }
-        }
-
-        private void DocxFolder_Button_Click(object sender, RoutedEventArgs e)
-        {
-            using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
-            {
-                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
-                DocxFolder.Text = dialog.SelectedPath;
-            }
-        }
     }
 }

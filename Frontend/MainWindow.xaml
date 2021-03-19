@@ -3,9 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Frontend"
+        xmlns:local="clr-namespace:Frontend" xmlns:usercontrols="clr-namespace:Frontend.View.UserControls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="600" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20" />
@@ -25,19 +25,10 @@
             <RowDefinition Height="1*" />
             <RowDefinition Height="1*" />
             <RowDefinition Height="1*" />
+            <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="1" Grid.Column="1">Pdf Ordner</TextBlock>
-        <TextBlock Grid.Row="2" Grid.Column="1">Bilder Ordner</TextBlock>
-        <TextBlock Grid.Row="3" Grid.Column="1">Worddateien Ordner</TextBlock>
-
-        <TextBox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Name="PdfFolder" TextChanged="PdfFolder_TextChanged"></TextBox>
-        <TextBox Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Name="ImageFolder" TextChanged="ImageFolder_TextChanged"></TextBox>
-        <TextBox Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Name="DocxFolder" TextChanged="DocxFolder_TextChanged"></TextBox>
-
-        <Button Grid.Row="1" Grid.Column="4" Name="PdfFolderButton" Click="PdfFolder_Button_Click">Ordner auswaehlen</Button>
-        <Button Grid.Row="2" Grid.Column="4" Name="ImageFolderButton" Click="ImageFolder_Button_Click">Ordner auswaehlen</Button>
-        <Button Grid.Row="3" Grid.Column="4" Name="DocxFolderButton" Click="DocxFolder_Button_Click">Ordner auswaehlen</Button>
+        <usercontrols:FolderData Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" Grid.ColumnSpan="3"></usercontrols:FolderData>
         
         <Button Grid.Row="6" Grid.Column="2" Name="StartButton" Click="Start_Button_Click">Starten</Button>
         <Button Grid.Row="6" Grid.Column="4" Name="StopButton" Click="Stop_Button_Click">Stop</Button>
@@ -45,6 +36,13 @@
         <Button Grid.Row="8" Grid.Column="5" Name="EmailAccount" Click="EmailAccount_Button_Click">Email Account</Button>
 
         <TextBlock Grid.Row="8" Grid.Column="1" Name="IsRunning" Foreground="Blue">Suche nach neuen mails..</TextBlock>
-        <TextBlock Grid.Row="8" Grid.Column="2" Grid.ColumnSpan="3" Name="Status"></TextBlock>
+
+        <ScrollViewer Grid.Row="9" Grid.Column="2" Grid.ColumnSpan="3">
+            <TextBlock Name="Status"></TextBlock>
+        </ScrollViewer>
+
+        <TextBlock Grid.Row="7" Grid.Column="1" VerticalAlignment="Center">Show Debug Messages</TextBlock>
+        <CheckBox Name="ShowDebug" Grid.Row="7" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right"></CheckBox>
+        
     </Grid>
 </Window>
